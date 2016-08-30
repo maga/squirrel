@@ -3,7 +3,7 @@
 Saves files in memcached, even if file size exeeds memcached value limit.
 
 ## TODO
-
+Specs!
 Squirrel.fetch_files
 Squirrel.delete_files
 
