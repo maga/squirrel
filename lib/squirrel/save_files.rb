@@ -13,7 +13,9 @@ module Squirrel
 
     def save_files
       files.each do |file|
-        FileCacher.new(file).cache
+        # TODO: return list of unexisted files
+        # and list of saved files
+        FileCacher.new(file).cache if file.exists?
       end
     end
 

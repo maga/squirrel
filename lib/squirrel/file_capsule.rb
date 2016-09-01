@@ -7,41 +7,41 @@ module Squirrel
 
     include Enumerable
 
-    # TODO: move CHUNK size to config
-    # Default value is 1Mb
-    # Alternative size depending on Memcached value size limit
-    # could be passed to *_files,
-    # etc: save_files(filenames: filenames, chunk_size: 2048000)
-    CHUNK = 1024000
+    CHUNK_SIZE = 1024000.0
 
-    attr_reader :filename, :basename, :chunks
+    attr_reader :filename, :basename
 
     def initialize(options)
       @filename = options[:filename]
+
+      return unless exists?
+
       @basename = get_basename
       @chunks = get_chunks
     end
 
-    # TODO: refactor like (0..file.size / chunk_size).inject({})
-    def get_chunks(chunk_size = CHUNK)
-      i = 0
-      hash = {}
-
-      File.open(filename, "r") do |fh_in|
-        until fh_in.eof?
-          hash["#{basename}_#{i}"] = fh_in.read(chunk_size)
-          i += 1
-        end
-      end
-
-      hash
+    # TODO: Handle Errno::ENOENT: No such file or directory
+    # for unexisted file
+    def exists?
+      File.file?(filename)
     end
 
     private
 
-    # TODO: Errno::ENOENT: No such file or directory Handler
-    def open_file(filename)
-      File.open(filename, "r")
+    def get_chunks(chunk_size = CHUNK_SIZE)
+      File.open(filename) do |fh_in|
+        number_of_chunks.times.with_object({}) do |i, hash|
+          hash["#{basename}_#{i}"] = fh_in.read(chunk_size)
+        end
+      end
+    end
+
+    def number_of_chunks
+      (file.size / CHUNK_SIZE).ceil
+    end
+
+    def file
+      File.open(filename)
     end
 
     def get_basename
