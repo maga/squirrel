@@ -7,16 +7,23 @@ module Squirrel
 
     include Enumerable
 
+    # TODO: move CHUNK size to config
+    # Default value is 1Mb
+    # Alternative size depending on Memcached value size limit
+    # could be passed to *_files,
+    # etc: save_files(filenames: filenames, chunk_size: 2048000)
+    CHUNK = 1024000
+
     attr_reader :filename, :basename, :chunks
 
     def initialize(options)
       @filename = options[:filename]
       @basename = get_basename
-      @chunks = get_chunks(options[:chunk_size])
+      @chunks = get_chunks
     end
 
     # TODO: refactor like (0..file.size / chunk_size).inject({})
-    def get_chunks(chunk_size)
+    def get_chunks(chunk_size = CHUNK)
       i = 0
       hash = {}
 

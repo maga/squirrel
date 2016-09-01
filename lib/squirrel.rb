@@ -14,13 +14,6 @@ require "squirrel/save_files"
 # end
 # Foo.new.save_files("files/filename.txt")
 module Squirrel
-  # TODO: move CHUNK size to config
-  # Default value is 1Mb
-  # Alternative size depending on Memcached value size limit
-  # could be passed to *_files,
-  # etc: save_files(filenames: filenames, chunk_size: 2048000)
-  CHUNK = 1024000
-
   def save_files(*filenames)
     SaveFiles.new(filenames: filenames)
   end

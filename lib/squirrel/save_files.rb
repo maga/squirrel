@@ -4,7 +4,7 @@ module Squirrel
 
     # TODO: move CHUNK size to config
     def post_initialize
-      @files = FilesFactory.build(filenames: filenames, chunk_size: chunk_size)
+      @files = FilesFactory.build(filenames: filenames)
 
       save_files
     end
