@@ -38,7 +38,7 @@ module Squirrel
     end
 
     def get_basename
-      File.basename(filename).match(/(.+)\.(.+)/)[1]
+      File.basename(filename)
     end
   end
 end

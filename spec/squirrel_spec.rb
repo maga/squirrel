@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Squirrel do
   let(:file_absolute_path) { File.expand_path("test.pdf", __dir__) }
   let(:file) { File.open(file_absolute_path, "r") }
-  let(:basename) { File.basename(file_absolute_path).match(/(.+)\.(.+)/)[1] }
+  let(:basename) { File.basename(file_absolute_path) }
   let(:file_chunks_amount) { file.size / 1024000 }
   let(:file_keys) do
     (0..file_chunks_amount).inject([]) do |keys, i|
@@ -30,13 +30,11 @@ describe Squirrel do
     end
 
     xit "saves chunks" do
-      restored_file = File.open("another_file.pdf", "w") do |fh_out|
-        file_chunks.each do |chunk|
-          fh_out << chunk
-        end
-      end
+      content = file_chunks.inject([]) do |chunk, array|
+        array << chunk
+      end.join
 
-      expect(restored_file).to eq file
+      expect(file).to have_file_content
     end
   end
 
