@@ -24,21 +24,6 @@ describe Squirrel::FileCapsule do
     it "#chunks.length == file.size / chunk_size" do
       expect(file_capsule.chunks_keys.size).to eq (file.size / chunk_size).ceil
     end
-
-    # should be moved to fetch spec
-    let(:file_keys) do
-      (0..file_chunks_amount).map { |i| "#{file_capsule.basename}_#{i}" }
-    end
-    let(:file_chunks) { dalli_client.get_multi(file_keys) }
-    let(:file_chunks_amount) { file.size / 1024000 }
-
-    xit "saves chunks" do
-      content = file_chunks.inject([]) do |chunk, array|
-        array << chunk
-      end.join
-
-      expect(file).to have_file_content
-    end
   end
 
 end

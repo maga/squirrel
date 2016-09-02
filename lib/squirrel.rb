@@ -1,9 +1,10 @@
 require "squirrel/version"
+require "squirrel/client"
 require "squirrel/manage_files"
 require "squirrel/files_factory"
 require "squirrel/file_capsule"
 require "squirrel/save_files"
-# require "squirrel/fetch_files"
+require "squirrel/fetch_files"
 # require "squirrel/delete_files"
 
 # General file management interface
