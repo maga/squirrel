@@ -22,7 +22,7 @@ describe Squirrel::FileCapsule do
     end
 
     it "#chunks.length == file.size / chunk_size" do
-      expect(file_capsule.keys.size).to eq (file.size / chunk_size).ceil
+      expect(file_capsule.chunks_keys.size).to eq (file.size / chunk_size).ceil
     end
 
     # should be moved to fetch spec

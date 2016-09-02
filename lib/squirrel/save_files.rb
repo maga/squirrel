@@ -23,7 +23,7 @@ module Squirrel
       OPTIONS = { namespace: "app_v1", compress: true }
 
       def cache
-        file.each do |key, chunk|
+        file.each_chunk do |key, chunk|
           cache_value(key, chunk)
         end
         cache_keys
@@ -34,7 +34,7 @@ module Squirrel
       end
 
       def cache_keys
-        cache_value(file.basename, file.keys)
+        cache_value(file.basename, file.chunk_keys)
       end
 
       def dalli_client

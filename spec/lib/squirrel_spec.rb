@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Squirrel do
   let(:filename) { File.expand_path("test.pdf", __dir__) }

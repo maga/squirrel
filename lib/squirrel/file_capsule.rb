@@ -3,7 +3,8 @@ require "forwardable"
 module Squirrel
   class FileCapsule
     extend Forwardable
-    def_delegators :@chunks, :each, :keys
+    def_delegator :@chunks, :each, :each_chunk
+    def_delegator :@chunks, :keys, :chunks_keys
 
     include Enumerable
 
