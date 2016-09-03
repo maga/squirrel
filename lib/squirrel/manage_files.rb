@@ -2,10 +2,10 @@ require "dalli"
 
 module Squirrel
   class ManageFiles
-    attr_reader :filenames
+    attr_reader :files
 
     def initialize(options)
-      @filenames  = options[:filenames]
+      @files = FilesFactory.build(filenames: options[:filenames])
 
       post_initialize
     end

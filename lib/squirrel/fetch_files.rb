@@ -1,44 +1,40 @@
 module Squirrel
   class FetchFiles < ManageFiles
 
-    def post_initialize(options)
+    def post_initialize
       fetch_files
     end
 
     def fetch_files
-      filenames.each do |filename|
-        FetchFile(filename)
+      files.each do |file|
+        FetchFile.new(file)
       end
     end
 
     private
 
-    FetchFile = Struct.new(filename) do
+    FetchFile = Struct.new(:file) do
+      include Client
+
       def initialize(*args)
         super
         fetch_file
       end
 
       def fetch_file
-        chunks_of_file.each.with_object(empty_file) do |chunk, file|
-          file << file_chunk(chunk)
-        end
+        File.open(file.filename, "w") { |f| f.write file_values }
       end
 
-      def chunks_of_file
-        dalli_client.get(basename)
+      def file_values
+        file_chunks.values.join
       end
 
-      def empty_file
-        File.open("filename", "w")
+      def file_chunks
+        client.get_multi(chunks_keys)
       end
 
-      def basename
-        File.basename(filename)
-      end
-
-      def file_chunk(key)
-        dalli_client.get(key)
+      def chunks_keys
+        client.get(file.basename)
       end
     end
   end

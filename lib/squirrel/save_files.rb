@@ -1,10 +1,6 @@
 module Squirrel
   class SaveFiles < ManageFiles
-    attr_reader :files
-
     def post_initialize
-      @files = FilesFactory.build(filenames: filenames)
-
       save_files
     end
 
