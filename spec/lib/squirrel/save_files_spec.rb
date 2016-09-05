@@ -1,20 +1,20 @@
 require "spec_helper"
+require_relative "./shared_stuff"
 
 describe Squirrel::SaveFiles do
-  let(:filename) { File.expand_path("test.pdf", __dir__) }
+  include_context "shared stuff"
 
-  let(:options) { { namespace: "app_v1", compress: true } }
-  let(:dalli_client) { Dalli::Client.new("localhost:11211", options) }
+  let(:saved_files) { described_class.new(filenames: [filename, fake_file]) }
 
-  after { dalli_client.delete(filename) }
+  it "returns valid object" do
+    errors = saved_files.errors
+    files  = saved_files.files
+    file = files.first
 
-  # context "saving fake file" do
-
-  # end
-
-  context "saving real file" do
-    it "responds with true" do
-      expect(described_class.new(filenames: [filename])).to be_truthy
-    end
+    expect(errors).to be_a Array
+    expect(errors.size).to eq 1
+    expect(errors[0]).to eq "No such file #{fake_file}"
+    expect(files).to be_a Array
+    expect(file).to respond_to :save
   end
 end

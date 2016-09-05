@@ -1,35 +1,24 @@
 require "spec_helper"
+require_relative "./shared_stuff.rb"
 
 describe Squirrel::FetchFiles do
-  let(:options) { { namespace: "app_v1", compress: true } }
-  let(:dalli_client) { Dalli::Client.new("localhost:11211", options) }
+  include_context "shared stuff"
 
-  let(:filename) { File.expand_path("test.pdf", File.dirname(__FILE__)) }
-  let!(:file_content) { File.read(filename) }
-  let(:file) { File.open(filename, "w") }
-
-  let(:file_chunks) { dalli_client.get_multi(file_keys) }
+  let(:fetched_files) { described_class.new(filenames: [filename, fake_file]) }
 
   before :each do
     Squirrel.save_files(filename)
     File.delete(filename)
-
-    described_class.new(filenames: [filename])
   end
 
-  after(:each) do
-    # Delete file from memcached
-  end
+  it "returns valid object" do
+    errors = fetched_files.errors
+    files  = fetched_files.files
+    file = files.first
 
-  it "fetches chunks" do
-    puts File.expand_path(File.dirname(__FILE__))
-
-    content = File.read(filename)
-
-    expect(content).to eq file_content
-  end
-
-  it "fetches_files" do
-    expect(File.file?(filename)).to eq true
+    expect(errors).to be_a Array
+    expect(errors.size).to eq 1
+    expect(files).to be_a Array
+    expect(file).to respond_to :get
   end
 end

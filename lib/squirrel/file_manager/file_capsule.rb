@@ -15,14 +15,14 @@ module Squirrel
         @chunks_keys = specify_keys
       end
 
+      def exists?
+        true
+      end
+
       private
 
       def set_basename
         ::File.basename(filename)
-      end
-
-      def exists?
-        true
       end
 
       def specify_keys
