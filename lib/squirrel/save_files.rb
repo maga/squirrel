@@ -1,3 +1,5 @@
+require_relative "./file_manager/file_capsule_saver"
+
 module Squirrel
   class SaveFiles < ManageFiles
     def post_initialize
@@ -6,31 +8,18 @@ module Squirrel
 
     private
 
-    def save_files
-      files.each do |file|
-        # TODO: Handle Errno::ENOENT: No such file or directory
-        # return list of unexisted files and list of saved files
-        FileCacher.new(file).cache if file.exists?
-      end
+    def file_capsule_class
+      FileManager::FileCapsuleSaver
     end
 
-    FileCacher = Struct.new(:file) do
-      include Client
+    def save_files
+      files.each { |file| save_file(file) }
+    end
 
-      def cache
-        file.each_chunk do |key, chunk|
-          cache_value(key, chunk)
-        end
-        cache_keys
-      end
-
-      def cache_value(key, value)
-        client.set(key, value)
-      end
-
-      def cache_keys
-        cache_value(file.basename, file.chunks_keys)
-      end
+    def save_file(file)
+      file.save
+    rescue => e
+      errors << e.message
     end
   end
 end
