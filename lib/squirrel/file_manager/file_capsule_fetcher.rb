@@ -2,16 +2,16 @@ module Squirrel
   module FileManager
     class FileCapsuleFetcher < FileCapsule
       def get
-        (raise "No such file #{filename}" and return) unless exists?
+        (raise "No value found for #{filename}" and return) unless exists?
 
         write_file
       end
 
-      private
-
       def exists?
         !!chunks_keys
       end
+
+      private
 
       def content
         MemcachedClient.get_multi(chunks_keys).values.join

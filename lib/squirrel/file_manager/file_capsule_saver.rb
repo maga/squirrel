@@ -8,11 +8,11 @@ module Squirrel
         save_keys
       end
 
-      private
-
       def exists?
         ::File.file?(filename)
       end
+
+      private
 
       def save_chunks
         chunks.each do |key, chunk|

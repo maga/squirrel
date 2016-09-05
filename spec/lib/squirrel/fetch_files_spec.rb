@@ -18,6 +18,7 @@ describe Squirrel::FetchFiles do
 
     expect(errors).to be_a Array
     expect(errors.size).to eq 1
+    expect(errors[0]).to eq "No value found for #{fake_file}"
     expect(files).to be_a Array
     expect(file).to respond_to :get
   end
